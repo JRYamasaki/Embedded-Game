@@ -1,10 +1,15 @@
 import serial
+import random
 arduinoSerialData = serial.Serial('/dev/ttyACM0', 9600)
+
+randomInt = random.randint(1, 15)
+
+arduinoSerialData.write(str(randomInt).encode())
+
 while 1:
     if(arduinoSerialData.inWaiting()>0):
         myData = arduinoSerialData.readline()
-        #if myData.find(b'btn1') != -1:
-         #   arduinoSerialData.write('13'.encode())
-          #  print('Lighting 13')
-        #else:
         print(myData)
+        randomInt = random.randint(1, 15)
+        arduinoSerialData.write(str(randomInt).encode())
+        print(randomInt)

@@ -4,7 +4,10 @@ const int btn1 = 2;
 const int btn2 = 3;
 const int btn3 = 4;
 const int btn4 = 5;
-const int ledPin = 13;
+const int ledPin1 = 13;
+const int ledPin2 = 12;
+const int ledPin4 = 11;
+const int ledPin8 = 10;
 
 String serialInput = "";
 
@@ -22,12 +25,20 @@ int buttonState4 = 0;
 
 void setup()
 {
-  pinMode(ledPin, OUTPUT);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(ledPin4, OUTPUT);
+  pinMode(ledPin8, OUTPUT);
   Serial.begin(9600);
 }
 
 void loop()
 {
+  if(Serial.available())
+  {
+    serialInput = Serial.readString();
+    setNumbers(serialInput);
+  }
   readInputPins();
   processInputs();
 }
@@ -53,6 +64,16 @@ void processInputs()
       Serial.flush();
     }
   }
+}
+
+void setNumbers(String input)
+{
+  long randNumber = input.toInt();
+  Serial.print(randNumber);
+  digitalWrite(ledPin1, (randNumber & 1) > 0);
+  digitalWrite(ledPin2, (randNumber & 2) > 0);
+  digitalWrite(ledPin4, (randNumber & 4) > 0);
+  digitalWrite(ledPin8, (randNumber & 8) > 0);
 }
 
 void signalTo(int pin, int delayTime)
