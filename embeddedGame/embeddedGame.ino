@@ -1,13 +1,13 @@
 #include <Pin.h>
 
-const int btn1 = 2;
-const int btn2 = 3;
-const int btn3 = 4;
-const int btn4 = 5;
-const int ledPin1 = 13;
-const int ledPin2 = 12;
-const int ledPin4 = 11;
-const int ledPin8 = 10;
+const uint8_t btn1 = 2;
+const uint8_t btn2 = 3;
+const uint8_t btn3 = 4;
+const uint8_t btn4 = 5;
+const uint8_t ledPin1 = 13;
+const uint8_t ledPin2 = 12;
+const uint8_t ledPin4 = 11;
+const uint8_t ledPin8 = 10;
 
 String serialInput = "";
 
@@ -18,10 +18,10 @@ Pin inputPins[] = {Pin{btn1, 0, "btn1\n"},
                    
 uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
-int buttonState1 = 0;
-int buttonState2 = 0;
-int buttonState3 = 0;
-int buttonState4 = 0;
+uint8_t buttonState1 = 0;
+uint8_t buttonState2 = 0;
+uint8_t buttonState3 = 0;
+uint8_t buttonState4 = 0;
 
 void setup()
 {
