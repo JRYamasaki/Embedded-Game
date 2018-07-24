@@ -69,7 +69,6 @@ void processInputs()
 void setNumbers(String input)
 {
   long randNumber = input.toInt();
-  Serial.print(randNumber);
   digitalWrite(ledPin1, (randNumber & 1) > 0);
   digitalWrite(ledPin2, (randNumber & 2) > 0);
   digitalWrite(ledPin4, (randNumber & 4) > 0);
