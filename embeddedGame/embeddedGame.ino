@@ -11,10 +11,10 @@ const uint8_t ledPin8 = 10;
 
 String serialInput = "";
 
-Pin inputPins[] = {Pin{btn1, 0, "btn1\n"},
-                   Pin{btn2, 0, "btn2\n"},
-                   Pin{btn3, 0, "btn3\n"},
-                   Pin{btn4, 0, "btn4\n"}};
+Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
+                   Pin{btn2, 0, "g1btn2\n"},
+                   Pin{btn3, 0, "g1btn3\n"},
+                   Pin{btn4, 0, "g1btn4\n"}};
                    
 uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
@@ -37,13 +37,21 @@ void loop()
   if(Serial.available())
   {
     serialInput = Serial.readString();
-    setNumbers(serialInput);
+    processGame1Data(serialInput);
   }
   readInputPins();
   processInputs();
 }
 
 //Helper Functions
+
+void processGame1Data(String data)
+{
+  if(data.substring(0,2).equals("g1"))
+  {
+    setNumbers(data.substring(2, data.length())); 
+  }
+}
 
 void readInputPins()
 {
@@ -60,7 +68,7 @@ void processInputs()
     if(inputPins[i].needsToSendMessage())
     {
       Serial.print(inputPins[i].getMessage());
-      delay(1000);
+      delay(125);
       Serial.flush();
     }
   }

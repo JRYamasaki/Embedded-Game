@@ -1,6 +1,8 @@
 import serial
 import random
 
+arduinoSerialData = serial.Serial('/dev/ttyACM0', 9600)
+randomInt = random.randint(1, 15)
 game1lookup = { 1: 1,
                 2: 4,
                 3: 1,
@@ -17,7 +19,24 @@ game1lookup = { 1: 1,
                 14: 4,
                 15: 3 }
 
-def processAnswer(challengeNum, userResponse):
+#Functions
+def gameInit():
+    #Send initial random number to game 1
+    arduinoSerialData.write(('g1' + str(randomInt)).encode()) 
+
+def processGame1Input(userResponse):
+    global randomInt
+    #Take off newline and game indicator
+    userResponse = userResponse[2:-1]
+    #process the answer
+    print(userResponse)
+    processGame1Answer(randomInt, userResponse)
+
+    #generate new number and send to arduino
+    randomInt = random.randint(1, 15)
+    arduinoSerialData.write(('g1' + str(randomInt)).encode())
+    
+def processGame1Answer(challengeNum, userResponse):
     numberResponse = int(userResponse[-1:])
     a = bool(challengeNum & 1)
     b = bool((challengeNum & 2) >> 1)
@@ -28,23 +47,13 @@ def processAnswer(challengeNum, userResponse):
         print("Correct!")
     else:
         print("Incorrect")
-
-arduinoSerialData = serial.Serial('/dev/ttyACM0', 9600)
-
-randomInt = random.randint(1, 15)
-
-arduinoSerialData.write(str(randomInt).encode())
+        
+# -------------- Game start ----------------
+gameInit()
 
 while 1:
     if(arduinoSerialData.inWaiting()>0):
-        myData = arduinoSerialData.readline()
-        #Take off newline
-        myData = myData[:-1]
-        #process the answer
-        print(myData)
-        processAnswer(randomInt, myData)
-
-        #generate new number and send to arduino
-        randomInt = random.randint(1, 15)
-        arduinoSerialData.write(str(randomInt).encode())
-        print(randomInt)
+        myData = arduinoSerialData.readline().decode("utf-8")
+        #If the data being sent was meant for game 1
+        if(myData[:2] == "g1"):
+            processGame1Input(myData)
