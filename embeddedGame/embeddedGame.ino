@@ -9,6 +9,8 @@ const uint8_t ledPin2 = 12;
 const uint8_t ledPin4 = 11;
 const uint8_t ledPin8 = 10;
 
+const uint8_t timeBeforeFlushInms = 125;
+
 String serialInput = "";
 
 Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
@@ -68,7 +70,7 @@ void processInputs()
     if(inputPins[i].needsToSendMessage())
     {
       Serial.print(inputPins[i].getMessage());
-      delay(125);
+      delay(timeBeforeFlushInms);
       Serial.flush();
     }
   }
