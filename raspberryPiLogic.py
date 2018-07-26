@@ -18,6 +18,9 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
+cycleLimit = 100
+timeIntervalLowerBound = 300
+timeIntervalUpperBound = 1000
 
 #Functions
 def gameInit():
@@ -51,8 +54,15 @@ def processGame1Answer(challengeNum, userResponse):
 # -------------- Game start ----------------
 gameInit()
 
-while 1:
-    if(arduinoSerialData.inWaiting()>0):
+cycles = 0
+while True:
+    cycles += 1
+    print(cycles)
+    #If this print statement is taken away, cycles becomes 100
+    if (cycles == cycleLimit):
+        arduinoSerialData.write(('g2' + str(random.randint(timeIntervalLowerBound, timeIntervalUpperBound))).encode())
+        cycles = 0
+    if arduinoSerialData.inWaiting() > 0:
         myData = arduinoSerialData.readline().decode("utf-8")
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):

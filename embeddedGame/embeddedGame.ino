@@ -9,6 +9,9 @@ const uint8_t ledPin2 = 12;
 const uint8_t ledPin4 = 11;
 const uint8_t ledPin8 = 10;
 
+const uint8_t timingLED = 9;
+const uint8_t numberOfBlinks = 4;
+
 const uint8_t timeBeforeFlushInms = 125;
 
 String serialInput = "";
@@ -31,6 +34,7 @@ void setup()
   pinMode(ledPin2, OUTPUT);
   pinMode(ledPin4, OUTPUT);
   pinMode(ledPin8, OUTPUT);
+  pinMode(timingLED, OUTPUT);
   Serial.begin(9600);
 }
 
@@ -40,6 +44,7 @@ void loop()
   {
     serialInput = Serial.readString();
     processGame1Data(serialInput);
+    processGame2Data(serialInput);
   }
   readInputPins();
   processInputs();
@@ -52,6 +57,18 @@ void processGame1Data(String data)
   if(data.substring(0,2).equals("g1"))
   {
     setNumbers(data.substring(2, data.length())); 
+  }
+}
+
+void processGame2Data(String data)
+{
+  if(data.substring(0,2).equals("g2"))
+  {
+    for(int i = 0; i < numberOfBlinks; i++)
+    {
+      signalTo(timingLED, data.substring(2, data.length()).toInt());
+    }
+    delay(1000);
   }
 }
 
@@ -90,5 +107,6 @@ void signalTo(int pin, int delayTime)
   digitalWrite(pin, HIGH);
   delay(delayTime);
   digitalWrite(pin, LOW);
+  delay(delayTime);
 }
 
