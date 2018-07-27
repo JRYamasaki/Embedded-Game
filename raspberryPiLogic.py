@@ -18,9 +18,10 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-cycleLimit = 1000000
+cycleLimit = 100000
 timeIntervalLowerBound = 300
-timeIntervalUpperBound = 1000
+timeIntervalUpperBound = 999
+toleranceForTiming = 1000
 
 #Functions
 def gameInit():
@@ -59,7 +60,7 @@ while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
     if (cycles == cycleLimit):
-        arduinoSerialData.write(('g2' + str(random.randint(timeIntervalLowerBound, timeIntervalUpperBound))).encode())
+        arduinoSerialData.write(('g2' + str(random.randint(timeIntervalLowerBound, timeIntervalUpperBound)) + str(toleranceForTiming)).encode())
         cycles = 0
     if arduinoSerialData.inWaiting() > 0:
         myData = arduinoSerialData.readline().decode("utf-8")

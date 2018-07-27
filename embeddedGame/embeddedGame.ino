@@ -8,6 +8,7 @@ const uint8_t ledPin1 = 13;
 const uint8_t ledPin2 = 12;
 const uint8_t ledPin4 = 11;
 const uint8_t ledPin8 = 10;
+const uint8_t timingButton = 22;
 
 const uint8_t timingLED = 9;
 const uint8_t numberOfBlinks = 4;
@@ -24,6 +25,7 @@ Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
                    
 uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
+uint8_t tolerance = 0;
 uint8_t buttonState1 = 0;
 uint8_t buttonState2 = 0;
 uint8_t buttonState3 = 0;
@@ -65,9 +67,10 @@ void processGame2Data(String data)
 {
   if(data.substring(0,2).equals("g2"))
   {
+    tolerance = data.substring(6, data.length()).toInt();
     for(int i = 0; i < numberOfBlinks; i++)
     {
-      signalTo(timingLED, data.substring(2, data.length()).toInt());
+      signalTo(timingLED, data.substring(2, 5).toInt());
     }
     delay(1000);
   }
