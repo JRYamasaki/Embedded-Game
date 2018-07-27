@@ -18,7 +18,7 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-cycleLimit = 100000
+cycleLimit = 1000000/4
 timeIntervalLowerBound = 300
 timeIntervalUpperBound = 999
 toleranceForTiming = 1000
@@ -62,8 +62,13 @@ while True:
     if (cycles == cycleLimit):
         arduinoSerialData.write(('g2' + str(random.randint(timeIntervalLowerBound, timeIntervalUpperBound)) + str(toleranceForTiming)).encode())
         cycles = 0
+        print("send number")
     if arduinoSerialData.inWaiting() > 0:
+        print("data recieved")
         myData = arduinoSerialData.readline().decode("utf-8")
+        print(myData)
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):
             processGame1Input(myData)
+        if(myData[:2] == "g2"):
+            print(myData)
