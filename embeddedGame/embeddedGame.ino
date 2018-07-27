@@ -19,7 +19,8 @@ String serialInput = "";
 Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
                    Pin{btn2, 0, "g1btn2\n"},
                    Pin{btn3, 0, "g1btn3\n"},
-                   Pin{btn4, 0, "g1btn4\n"}};
+                   Pin{btn4, 0, "g1btn4\n"},
+                   Pin{timingButton, 0, "g2\n"}};
                    
 uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
