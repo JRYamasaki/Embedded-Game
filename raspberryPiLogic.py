@@ -1,7 +1,8 @@
 import serial
 import random
+import time
 
-arduinoSerialData = serial.Serial('/dev/ttyACM0', 9600)
+arduinoSerialData = serial.Serial('/dev/ttyACM0', 115200)
 randomInt = random.randint(1, 15)
 game1lookup = { 1: 1,
                 2: 4,
@@ -18,7 +19,7 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-cycleLimit = 1000000/4
+cycleLimit = 250000
 timeIntervalLowerBound = 300
 timeIntervalUpperBound = 999
 toleranceForTiming = 1000
@@ -60,15 +61,13 @@ while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
     if (cycles == cycleLimit):
-        arduinoSerialData.write(('g2' + str(random.randint(timeIntervalLowerBound, timeIntervalUpperBound)) + str(toleranceForTiming)).encode())
+        arduinoSerialData.write('g2'.encode())
         cycles = 0
-        print("send number")
+        #print("send number")
     if arduinoSerialData.inWaiting() > 0:
-        print("data recieved")
         myData = arduinoSerialData.readline().decode("utf-8")
-        print(myData)
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):
             processGame1Input(myData)
         if(myData[:2] == "g2"):
-            print(myData)
+            print('g2 msg recieved')

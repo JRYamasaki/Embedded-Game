@@ -21,7 +21,7 @@ Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
                    Pin{btn2, 0, "g1btn2\n"},
                    Pin{btn3, 0, "g1btn3\n"},
                    Pin{btn4, 0, "g1btn4\n"},
-                   Pin{timingButton, 0, "g2"}};
+                   Pin{timingButton, 0, "g2\n"}};
                    
 uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
@@ -41,7 +41,7 @@ void setup()
   pinMode(ledPin4, OUTPUT);
   pinMode(ledPin8, OUTPUT);
   pinMode(timingLED, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop()
@@ -50,7 +50,7 @@ void loop()
   {
     serialInput = Serial.readString();
     processGame1Data(serialInput);
-    processGame2Data(serialInput);
+    processGame2Data(serialInput, timingLED, 300, 4);
   }
   readInputPins();
   processInputs();
@@ -66,26 +66,11 @@ void processGame1Data(String data)
   }
 }
 
-void processGame2Data(String data)
+void processGame2Data(String data, int pin, int timeBetweenBlinks, int numOfBlinks)
 {
   if(data.substring(0,2).equals("g2"))
   {
-    int timeBetweenBlinks = data.substring(2, 5).toInt();
-    tolerance = data.substring(6, data.length()).toInt();
-    tolLowerBound = (5 * timeBetweenBlinks) - (tolerance / 2);
-    tolUpperBound = (5 * timeBetweenBlinks) + (tolerance / 2);
-    //Mark the beginning time of the sequence
-    long startTime= millis();
-    tolLowerBound += startTime;
-    tolUpperBound += startTime;
-    Serial.print("g2lower:" + tolLowerBound + '\n');
-    delay(1000);
-    Serial.print("g2upper:" + tolUpperBound + '\n');
-    delay(1000);
-//  for(int i = 0; i < numberOfBlinks; i++)
-//  {
-//    signalTo(timingLED, timeBetweenBlinks);
-//  }
+    blinkLED(pin, timeBetweenBlinks, numOfBlinks);
   }
 }
 
@@ -94,10 +79,6 @@ void readInputPins()
   for(int i = 0; i < numOfInputs; i++)
   {
     inputPins[i].setMessageIndicator(digitalRead(inputPins[i].getPinNumber()));
-    if(inputPins[i].getPinNumber() == timingButton && inputPins[i].needsToSendMessage())
-    {
-      timingButtonPressTime = millis();
-    }
   }
 }
 
@@ -107,18 +88,7 @@ void processInputs()
   {
     if(inputPins[i].needsToSendMessage())
     {
-      if(inputPins[i].getPinNumber() == timingButton && timingButtonPressTime >= tolLowerBound && timingButtonPressTime <= tolUpperBound)
-      {
-        Serial.print(inputPins[i].getMessage() + "0\n");
-      }
-      else if(inputPins[i].getPinNumber() == timingButton && (timingButtonPressTime < tolLowerBound || timingButtonPressTime > tolUpperBound))
-      {
-        Serial.print(inputPins[i].getMessage() + "1\n");
-      }
-      else
-      {
-        Serial.print(inputPins[i].getMessage());
-      }
+      Serial.print(inputPins[i].getMessage());
       delay(timeBeforeFlushInms);
       Serial.flush();
     }
@@ -140,5 +110,13 @@ void signalTo(int pin, int delayTime)
   delay(delayTime);
   digitalWrite(pin, LOW);
   delay(delayTime);
+}
+
+void blinkLED(int pin, int timeBetweenBlinks, int numOfBlinks)
+{
+   for(int i = 0; i < numOfBlinks; i ++)
+   {
+     signalTo(pin, timeBetweenBlinks);  
+   }
 }
 
