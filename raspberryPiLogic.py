@@ -19,10 +19,10 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-cycleLimit = 250000
+cycleLimit = 250000 * 2
 timeIntervalLowerBound = 300
 timeIntervalUpperBound = 999
-toleranceForTiming = 1000
+toleranceForTiming = 3
 
 class Timer:
     startTime = 0
@@ -36,6 +36,19 @@ class Timer:
         self.endTime = time.time()
         print(self.endTime)
         return self.endTime - self.startTime
+
+    def calculateIfCorrectTime(self, timeBetweenBlinks, toleranceLateOrEarly):
+        timeBtnShouldBePushed = (8 * timeBetweenBlinks) + self.startTime
+        lowerBound = timeBtnShouldBePushed - toleranceLateOrEarly
+        upperBound = timeBtnShouldBePushed + toleranceLateOrEarly
+        if self.endTime > lowerBound and self.endTime < upperBound:
+            print('Button press was correct!')
+        else:
+            print('Button press incorrect')
+            print('timeBtnShouldBePushed: ' + str(timeBtnShouldBePushed))
+            print('Lower Bound: ' + str(lowerBound))
+            print('Upper Bound: ' + str(upperBound))
+            print('You pressed the button at: ' + str(self.endTime))
 
 #Functions
 def gameInit():
@@ -70,21 +83,25 @@ def processGame1Answer(challengeNum, userResponse):
 gameInit()
 cycles = 0
 timer = Timer()
+timeBetweenBlinks = 0
+toleranceLateOrEarly = 0
 
 while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
     if (cycles == cycleLimit):
+        #Divide by 100 to convert back to seconds
         timeBetweenBlinks = random.randint(timeIntervalLowerBound, timeIntervalUpperBound);
-        arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
+        toleranceLateOrEarly = (toleranceForTiming / 2)
         timer.start()
-        cycles = 0
+        arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
         #print("send number")
     if arduinoSerialData.inWaiting() > 0:
         myData = arduinoSerialData.readline().decode("utf-8")
+        if(myData[:2] == "g2"):
+            timer.stop()
+            cycles = 0
+            timer.calculateIfCorrectTime(timeBetweenBlinks / 1000, toleranceLateOrEarly)
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):
             processGame1Input(myData)
-        if(myData[:2] == "g2"):
-            totalTime = timer.stop()
-            print('btn was pushed ' + str(totalTime) + ' after the signal was sent')
