@@ -24,6 +24,19 @@ timeIntervalLowerBound = 300
 timeIntervalUpperBound = 999
 toleranceForTiming = 1000
 
+class Timer:
+    startTime = 0
+    endTime = 0
+
+    def start(self):
+        self.startTime = time.time()
+        print(self.startTime)
+
+    def stop(self):
+        self.endTime = time.time()
+        print(self.endTime)
+        return self.endTime - self.startTime
+
 #Functions
 def gameInit():
     #Send initial random number to game 1
@@ -55,13 +68,16 @@ def processGame1Answer(challengeNum, userResponse):
         
 # -------------- Game start ----------------
 gameInit()
-
 cycles = 0
+
+timer = Timer()
+
 while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
     if (cycles == cycleLimit):
         arduinoSerialData.write('g2'.encode())
+        timer.start()
         cycles = 0
         #print("send number")
     if arduinoSerialData.inWaiting() > 0:
@@ -70,4 +86,5 @@ while True:
         if(myData[:2] == "g1"):
             processGame1Input(myData)
         if(myData[:2] == "g2"):
-            print('g2 msg recieved')
+            totalTime = timer.stop()
+            print('btn was pushed ' + str(totalTime) + ' after the signal was sent')
