@@ -50,7 +50,7 @@ void loop()
   {
     serialInput = Serial.readString();
     processGame1Data(serialInput);
-    processGame2Data(serialInput, timingLED, 300, 4);
+    processGame2Data(serialInput, timingLED);
   }
   readInputPins();
   processInputs();
@@ -66,11 +66,13 @@ void processGame1Data(String data)
   }
 }
 
-void processGame2Data(String data, int pin, int timeBetweenBlinks, int numOfBlinks)
+void processGame2Data(String data, int pin)
 {
   if(data.substring(0,2).equals("g2"))
   {
-    blinkLED(pin, timeBetweenBlinks, numOfBlinks);
+    int commaPosition = data.indexOf(',');
+    int timeBetweenBlinks = data.substring(commaPosition + 1, data.length()).toInt();
+    blinkLED(pin, timeBetweenBlinks, numberOfBlinks);
   }
 }
 

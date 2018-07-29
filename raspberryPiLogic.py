@@ -69,14 +69,14 @@ def processGame1Answer(challengeNum, userResponse):
 # -------------- Game start ----------------
 gameInit()
 cycles = 0
-
 timer = Timer()
 
 while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
     if (cycles == cycleLimit):
-        arduinoSerialData.write('g2'.encode())
+        timeBetweenBlinks = random.randint(timeIntervalLowerBound, timeIntervalUpperBound);
+        arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
         timer.start()
         cycles = 0
         #print("send number")
