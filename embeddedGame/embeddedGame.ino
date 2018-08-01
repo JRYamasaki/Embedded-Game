@@ -33,6 +33,12 @@ uint8_t buttonState4 = 0;
 long tolLowerBound = 0;
 long tolUpperBound = 0;
 long timingButtonPressTime = 0;
+uint8_t toggleMax = 8;
+uint8_t toggleCounter = 0;
+long nextTimeToToggle = 0;
+unsigned long toggleTime = 0;
+boolean enableToggle = false;
+boolean toggleStatus = true;
 
 void setup()
 {
@@ -50,7 +56,12 @@ void loop()
   {
     serialInput = Serial.readString();
     processGame1Data(serialInput);
-    processGame2Data(serialInput, timingLED);
+    //processGame2Data(serialInput, timingLED);
+    processToggleData(serialInput, timingLED);
+  }
+  if(enableToggle && (millis() > nextTimeToToggle))
+  {
+    toggleLED(timingLED);
   }
   readInputPins();
   processInputs();
@@ -72,7 +83,20 @@ void processGame2Data(String data, int pin)
   {
     int commaPosition = data.indexOf(',');
     int timeBetweenBlinks = data.substring(commaPosition + 1, data.length()).toInt();
-    blinkLED(pin, timeBetweenBlinks, numberOfBlinks);
+    
+    //calculateNextToggleTime(timeBetweenBlinks);
+  }
+}
+
+void processToggleData(String data, int pin)
+{
+  if(data.substring(0,2).equals("g2"))
+  {
+    int commaPosition = data.indexOf(',');
+    toggleTime = data.substring(commaPosition + 1, data.length()).toInt();
+    toggleLED(pin);
+    enableToggle = true;
+    //calculateNextToggleTime();
   }
 }
 
@@ -120,5 +144,29 @@ void blinkLED(int pin, int timeBetweenBlinks, int numOfBlinks)
    {
      signalTo(pin, timeBetweenBlinks);  
    }
+}
+
+void toggleLED(int pin)
+{
+  if(!enableToggle)
+  {
+    enableToggle = true;
+  }
+  if(toggleCounter == toggleMax)
+  {
+    enableToggle = false;
+    toggleCounter = 0;
+    return;
+  }
+  digitalWrite(pin, toggleStatus);
+  toggleStatus = !toggleStatus;
+  toggleCounter++;
+  calculateNextToggleTime();
+}
+
+void calculateNextToggleTime()
+{
+  unsigned long temp = millis();
+  nextTimeToToggle = temp + toggleTime;
 }
 

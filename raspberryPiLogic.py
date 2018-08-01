@@ -95,7 +95,8 @@ while True:
         toleranceLateOrEarly = (toleranceForTiming / 2)
         timer.start()
         arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
-        #print("send number")
+        print('num was ' + str(timeBetweenBlinks))
+        cycles = 0
     if arduinoSerialData.inWaiting() > 0:
         myData = arduinoSerialData.readline().decode("utf-8")
         if(myData[:2] == "g2"):
@@ -105,3 +106,5 @@ while True:
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):
             processGame1Input(myData)
+        else:
+            print(myData)
