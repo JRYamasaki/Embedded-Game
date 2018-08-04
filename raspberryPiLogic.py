@@ -20,10 +20,10 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-cycleLimit = 250000 * 2
-timeIntervalLowerBound = 300
-timeIntervalUpperBound = 999
-toleranceForTiming = 3
+numOfCyclesBeforeNextInstanceOfGame2 = 250000 * 2
+timeIntervalLowerBoundInMs = 300
+timeIntervalUpperBoundInMs = 999
+toleranceLateOrEarlyInSeconds = 1.5
 
 #Functions
 def gameInit():
@@ -64,10 +64,9 @@ toleranceLateOrEarly = 0
 while True:
     cycles += 1
     #If this print statement is taken away, cycles becomes 100
-    if (cycles == cycleLimit):
+    if (cycles == numOfCyclesBeforeNextInstanceOfGame2):
         #Divide by 100 to convert back to seconds
-        timeBetweenBlinks = random.randint(timeIntervalLowerBound, timeIntervalUpperBound);
-        toleranceLateOrEarly = (toleranceForTiming / 2)
+        timeBetweenBlinks = random.randint(timeIntervalLowerBoundInMs, timeIntervalUpperBoundInMs);
         timer.start()
         arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
         print('num was ' + str(timeBetweenBlinks))
@@ -77,7 +76,7 @@ while True:
         if(myData[:2] == "g2"):
             timer.stop()
             cycles = 0
-            timer.calculateIfCorrectTime(timeBetweenBlinks / 1000, toleranceLateOrEarly)
+            timer.calculateIfCorrectTime(timeBetweenBlinks / 1000, toleranceLateOrEarlyInSeconds)
         #If the data being sent was meant for game 1
         if(myData[:2] == "g1"):
             processGame1Input(myData)
