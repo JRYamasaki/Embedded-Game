@@ -79,17 +79,6 @@ void processGame1Data(String data)
   }
 }
 
-void processGame2Data(String data, int pin)
-{
-  if(data.substring(0,2).equals("g2"))
-  {
-    int commaPosition = data.indexOf(',');
-    int timeBetweenBlinks = data.substring(commaPosition + 1, data.length()).toInt();
-    
-    //calculateNextToggleTime(timeBetweenBlinks);
-  }
-}
-
 void processToggleData(String data, int pin)
 {
   if(data.substring(0,2).equals("g2"))
@@ -98,7 +87,6 @@ void processToggleData(String data, int pin)
     timeLEDIsOnOrOffInMillis = data.substring(commaPosition + 1, data.length()).toInt();
     toggleLED(pin);
     timingLEDIsAllowedToToggle = true;
-    //calculateNextToggleTime();
   }
 }
 
@@ -132,22 +120,6 @@ void setNumbers(String input)
   digitalWrite(ledPin8, (randNumber & 8) > 0);
 }
 
-void signalTo(int pin, int delayTime)
-{
-  digitalWrite(pin, HIGH);
-  delay(delayTime);
-  digitalWrite(pin, LOW);
-  delay(delayTime);
-}
-
-void blinkLED(int pin, int timeBetweenBlinks, int numOfBlinks)
-{
-   for(int i = 0; i < numOfBlinks; i ++)
-   {
-     signalTo(pin, timeBetweenBlinks);  
-   }
-}
-
 void toggleLED(int pin)
 {
   if(!timingLEDIsAllowedToToggle)
@@ -160,8 +132,8 @@ void toggleLED(int pin)
     toggleCounter = 0;
     return;
   }
-  digitalWrite(pin, toggleStatus);
-  toggleStatus = !toggleStatus;
+  digitalWrite(pin, timingLEDState);
+  timingLEDState = !timingLEDState;
   toggleCounter++;
   calculateNextToggleTime();
 }
