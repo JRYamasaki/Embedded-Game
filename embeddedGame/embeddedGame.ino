@@ -56,18 +56,27 @@ void loop()
   {
     serialInput = Serial.readString();
     processGame1Data(serialInput);
-    //processGame2Data(serialInput, timingLED);
     processToggleData(serialInput, timingLED);
   }
-  if(enableToggle && (millis() > nextTimeToToggle))
-  {
-    toggleLED(timingLED);
-  }
+  checkForToggleEvent();
   readInputPins();
   processInputs();
 }
 
 //Helper Functions
+
+void checkForToggleEvent()
+{
+  if(LEDShouldBeToggled())
+  {
+    toggleLED(timingLED);
+  }
+}
+
+boolean LEDShouldBeToggled()
+{
+  return enableToggle && (millis() > nextTimeToToggle);
+}
 
 void processGame1Data(String data)
 {
