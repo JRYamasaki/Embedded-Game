@@ -1,5 +1,9 @@
 #include <Pin.h>
 
+// Constants
+const uint8_t timeBeforeFlushInms = 125;
+
+// Game 1 Constants
 const uint8_t btn1 = 2;
 const uint8_t btn2 = 3;
 const uint8_t btn3 = 4;
@@ -8,37 +12,26 @@ const uint8_t ledPin1 = 13;
 const uint8_t ledPin2 = 12;
 const uint8_t ledPin4 = 11;
 const uint8_t ledPin8 = 10;
+
+// Game 2 Constants
 const uint8_t timingButton = 22;
-
 const uint8_t timingLED = 9;
-const uint8_t numberOfBlinks = 4;
+const uint8_t toggleMax = 8;
 
-const uint8_t timeBeforeFlushInms = 125;
-
-String serialInput = "";
-
+// Global Variables
 Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
                    Pin{btn2, 0, "g1btn2\n"},
                    Pin{btn3, 0, "g1btn3\n"},
                    Pin{btn4, 0, "g1btn4\n"},
                    Pin{timingButton, 0, "g2\n"}};
-                   
-uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
+const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
-uint8_t tolerance = 100000;
-uint8_t buttonState1 = 0;
-uint8_t buttonState2 = 0;
-uint8_t buttonState3 = 0;
-uint8_t buttonState4 = 0;
-long tolLowerBound = 0;
-long tolUpperBound = 0;
-long timingButtonPressTime = 0;
-uint8_t toggleMax = 8;
+String serialInput = "";
 uint8_t toggleCounter = 0;
 long nextTimeToToggle = 0;
-unsigned long toggleTime = 0;
-boolean enableToggle = false;
-boolean toggleStatus = true;
+unsigned long timeLEDIsOnOrOffInMillis = 0;
+boolean timingLEDIsAllowedToToggle = false;
+boolean timingLEDState = true;
 
 void setup()
 {
@@ -75,7 +68,7 @@ void checkForToggleEvent()
 
 boolean LEDShouldBeToggled()
 {
-  return enableToggle && (millis() > nextTimeToToggle);
+  return timingLEDIsAllowedToToggle && (millis() > nextTimeToToggle);
 }
 
 void processGame1Data(String data)
@@ -102,9 +95,9 @@ void processToggleData(String data, int pin)
   if(data.substring(0,2).equals("g2"))
   {
     int commaPosition = data.indexOf(',');
-    toggleTime = data.substring(commaPosition + 1, data.length()).toInt();
+    timeLEDIsOnOrOffInMillis = data.substring(commaPosition + 1, data.length()).toInt();
     toggleLED(pin);
-    enableToggle = true;
+    timingLEDIsAllowedToToggle = true;
     //calculateNextToggleTime();
   }
 }
@@ -157,13 +150,13 @@ void blinkLED(int pin, int timeBetweenBlinks, int numOfBlinks)
 
 void toggleLED(int pin)
 {
-  if(!enableToggle)
+  if(!timingLEDIsAllowedToToggle)
   {
-    enableToggle = true;
+    timingLEDIsAllowedToToggle = true;
   }
   if(toggleCounter == toggleMax)
   {
-    enableToggle = false;
+    timingLEDIsAllowedToToggle = false;
     toggleCounter = 0;
     return;
   }
@@ -176,6 +169,6 @@ void toggleLED(int pin)
 void calculateNextToggleTime()
 {
   unsigned long temp = millis();
-  nextTimeToToggle = temp + toggleTime;
+  nextTimeToToggle = temp + timeLEDIsOnOrOffInMillis;
 }
 

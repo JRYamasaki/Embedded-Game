@@ -21,8 +21,8 @@ game1lookup = { 1: 1,
                 14: 4,
                 15: 3 }
 numOfCyclesBeforeNextInstanceOfGame2 = 250000 * 2
-timeIntervalLowerBoundInMs = 300
-timeIntervalUpperBoundInMs = 999
+timeIntervalLowerBoundInMillis = 300
+timeIntervalUpperBoundInMillis = 999
 toleranceLateOrEarlyInSeconds = 1.5
 
 #Functions
@@ -66,7 +66,7 @@ while True:
     #If this print statement is taken away, cycles becomes 100
     if (cycles == numOfCyclesBeforeNextInstanceOfGame2):
         #Divide by 100 to convert back to seconds
-        timeBetweenBlinks = random.randint(timeIntervalLowerBoundInMs, timeIntervalUpperBoundInMs);
+        timeBetweenBlinks = random.randint(timeIntervalLowerBoundInMillis, timeIntervalUpperBoundInMillis);
         timer.start()
         arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
         print('num was ' + str(timeBetweenBlinks))
