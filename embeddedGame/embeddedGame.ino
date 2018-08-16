@@ -47,9 +47,7 @@ void loop()
 {
   if(Serial.available())
   {
-    serialInput = Serial.readString();
-    processGame1Data(serialInput);
-    processToggleData(serialInput, timingLED);
+    allocateSerialData(Serial.readString());
   }
   checkForToggleEvent();
   readInputPins();
@@ -57,6 +55,30 @@ void loop()
 }
 
 //Helper Functions
+
+void allocateSerialData(const String& data)
+{
+  processGame1Data(data);
+  processGame2Data(data);
+}
+
+void processGame1Data(String data)
+{
+  if(data.substring(0,2).equals("g1"))
+  {
+    setNumbers(data.substring(2, data.length())); 
+  }
+}
+
+void processGame2Data(String data)
+{
+  if(data.substring(0,2).equals("g2"))
+  {
+    timeLEDIsOnOrOffInMillis = data.substring(data.indexOf(',') + 1, data.length()).toInt();
+    toggleLED(timingLED);
+    timingLEDIsAllowedToToggle = true;
+  }
+}
 
 void checkForToggleEvent()
 {
@@ -69,25 +91,6 @@ void checkForToggleEvent()
 boolean LEDShouldBeToggled()
 {
   return timingLEDIsAllowedToToggle && (millis() > nextTimeToToggle);
-}
-
-void processGame1Data(String data)
-{
-  if(data.substring(0,2).equals("g1"))
-  {
-    setNumbers(data.substring(2, data.length())); 
-  }
-}
-
-void processToggleData(String data, int pin)
-{
-  if(data.substring(0,2).equals("g2"))
-  {
-    int commaPosition = data.indexOf(',');
-    timeLEDIsOnOrOffInMillis = data.substring(commaPosition + 1, data.length()).toInt();
-    toggleLED(pin);
-    timingLEDIsAllowedToToggle = true;
-  }
 }
 
 void readInputPins()
