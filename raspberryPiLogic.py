@@ -28,7 +28,8 @@ toleranceLateOrEarlyInSeconds = 1.5
 #Functions
 def gameInit():
     #Send initial random number to game 1
-    arduinoSerialData.write(('g1' + str(random.randint(1, 15))).encode()) 
+    time.sleep(1);
+    arduinoSerialData.write(('g1' + str(randomInt)).encode());
 
 def processGame1Input(userResponse):
     global randomInt
@@ -55,8 +56,7 @@ def processGame1Answer(challengeNum, userResponse):
         print("Incorrect")
         
 def main():
-    #gameInit()
-    arduinoSerialData.write(('g1' + str(random.randint(1, 15))).encode()) 
+    gameInit()
     cycles = 0
     timer = Timer()
     timeBetweenBlinks = 0
