@@ -19,11 +19,11 @@ const uint8_t timingLED = 9;
 const uint8_t toggleMax = 8;
 
 // Global Variables
-Pin inputPins[] = {Pin{btn1, 0, "g1btn1\n"},
-                   Pin{btn2, 0, "g1btn2\n"},
-                   Pin{btn3, 0, "g1btn3\n"},
-                   Pin{btn4, 0, "g1btn4\n"},
-                   Pin{timingButton, 0, "g2\n"}};
+Pin inputPins[] = {Pin{btn1, "g1btn1\n"},
+                   Pin{btn2, "g1btn2\n"},
+                   Pin{btn3, "g1btn3\n"},
+                   Pin{btn4, "g1btn4\n"},
+                   Pin{timingButton, "g2\n"}};
 const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
 String serialInput = "";
@@ -51,7 +51,6 @@ void loop()
   }
   checkForToggleEvent();
   readInputPins();
-  processInputs();
 }
 
 //Helper Functions
@@ -97,15 +96,7 @@ void readInputPins()
 {
   for(int i = 0; i < numOfInputs; i++)
   {
-    inputPins[i].setMessageIndicator(digitalRead(inputPins[i].getPinNumber()));
-  }
-}
-
-void processInputs()
-{
-  for(int i = 0; i < numOfInputs; i++)
-  {
-    if(inputPins[i].needsToSendMessage())
+    if(digitalRead(inputPins[i].getPinNumber()))
     {
       Serial.print(inputPins[i].getMessage());
       delay(timeBeforeFlushInms);
