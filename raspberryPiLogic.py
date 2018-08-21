@@ -28,7 +28,7 @@ toleranceLateOrEarlyInSeconds = 1.5
 #Functions
 def gameInit():
     #Send initial random number to game 1
-    arduinoSerialData.write(('g1' + str(randomInt)).encode()) 
+    arduinoSerialData.write(('g1' + str(random.randint(1, 15))).encode()) 
 
 def processGame1Input(userResponse):
     global randomInt
@@ -54,31 +54,35 @@ def processGame1Answer(challengeNum, userResponse):
     else:
         print("Incorrect")
         
-# -------------- Game start ----------------
-gameInit()
-cycles = 0
-timer = Timer()
-timeBetweenBlinks = 0
-toleranceLateOrEarly = 0
+def main():
+    #gameInit()
+    arduinoSerialData.write(('g1' + str(random.randint(1, 15))).encode()) 
+    cycles = 0
+    timer = Timer()
+    timeBetweenBlinks = 0
+    toleranceLateOrEarly = 0
 
-while True:
-    cycles += 1
-    #If this print statement is taken away, cycles becomes 100
-    if (cycles == numOfCyclesBeforeNextInstanceOfGame2):
-        #Divide by 100 to convert back to seconds
-        timeBetweenBlinks = random.randint(timeIntervalLowerBoundInMillis, timeIntervalUpperBoundInMillis);
-        timer.start()
-        arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
-        print('num was ' + str(timeBetweenBlinks))
-        cycles = 0
-    if arduinoSerialData.inWaiting() > 0:
-        myData = arduinoSerialData.readline().decode("utf-8")
-        if(myData[:2] == "g2"):
-            timer.stop()
+    while True:
+        cycles += 1
+        #If this print statement is taken away, cycles becomes 100
+        if (cycles == numOfCyclesBeforeNextInstanceOfGame2):
+            #Divide by 100 to convert back to seconds
+            timeBetweenBlinks = random.randint(timeIntervalLowerBoundInMillis, timeIntervalUpperBoundInMillis);
+            timer.start()
+            arduinoSerialData.write(('g2,' + str(timeBetweenBlinks)).encode())
+            print('num was ' + str(timeBetweenBlinks))
             cycles = 0
-            timer.calculateIfCorrectTime(timeBetweenBlinks / 1000, toleranceLateOrEarlyInSeconds)
-        #If the data being sent was meant for game 1
-        if(myData[:2] == "g1"):
-            processGame1Input(myData)
-        else:
-            print(myData)
+        if arduinoSerialData.inWaiting() > 0:
+            myData = arduinoSerialData.readline().decode("utf-8")
+            if(myData[:2] == "g2"):
+                timer.stop()
+                cycles = 0
+                timer.calculateIfCorrectTime(timeBetweenBlinks / 1000, toleranceLateOrEarlyInSeconds)
+            #If the data being sent was meant for game 1
+            if(myData[:2] == "g1"):
+                processGame1Input(myData)
+            else:
+                print(myData)
+
+if __name__ == '__main__':
+    main()
