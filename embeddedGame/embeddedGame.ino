@@ -1,7 +1,7 @@
 #include <Pin.h>
 
 // Constants
-const uint8_t timeBeforeFlushInms = 125;
+const uint16_t delayTimeInMs = 1000;
 
 // Game 1 Constants
 const uint8_t btn1 = 2;
@@ -19,11 +19,11 @@ const uint8_t timingLED = 9;
 const uint8_t toggleMax = 8;
 
 // Global Variables
-Pin inputPins[] = {Pin{btn1, "g1btn1\n"},
-                   Pin{btn2, "g1btn2\n"},
-                   Pin{btn3, "g1btn3\n"},
-                   Pin{btn4, "g1btn4\n"},
-                   Pin{timingButton, "g2\n"}};
+Pin inputPins[] = {Pin{btn1, "1btn1\n"},
+                   Pin{btn2, "1btn2\n"},
+                   Pin{btn3, "1btn3\n"},
+                   Pin{btn4, "1btn4\n"},
+                   Pin{timingButton, "2\n"}};
 const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
 String serialInput = "";
@@ -41,6 +41,7 @@ void setup()
   pinMode(ledPin8, OUTPUT);
   pinMode(timingLED, OUTPUT);
   Serial.begin(115200);
+  Serial.setTimeout(15);
 }
 
 void loop()
@@ -63,15 +64,15 @@ void allocateSerialData(const String& data)
 
 void processGame1Data(String data)
 {
-  if(data.substring(0,2).equals("g1"))
+  if(data.charAt(0) == '1')
   {
-    setNumbers(data.substring(2, data.length())); 
+    setNumbers(data.substring(1, data.length()));
   }
 }
 
 void processGame2Data(String data)
 {
-  if(data.substring(0,2).equals("g2"))
+  if(data.charAt(0) == '2')
   {
     timeLEDIsOnOrOffInMillis = data.substring(data.indexOf(',') + 1, data.length()).toInt();
     toggleLED(timingLED);
@@ -99,8 +100,7 @@ void readInputPins()
     if(digitalRead(inputPins[i].getPinNumber()))
     {
       Serial.print(inputPins[i].getMessage());
-      delay(timeBeforeFlushInms);
-      Serial.flush();
+      delay(delayTimeInMs);
     }
   }
 }

@@ -29,7 +29,7 @@ toleranceLateOrEarlyInSeconds = 0.75
 def gameInit():
     #Send initial random number to game 1
     time.sleep(1);
-    arduinoSerialData.write(('g1' + str(randomInt)).encode());
+    arduinoSerialData.write(('1' + str(randomInt)).encode());
 
 def processGame1Input(userResponse):
     global randomInt
@@ -41,7 +41,7 @@ def processGame1Input(userResponse):
 
     #generate new number and send to arduino
     randomInt = random.randint(1, 15)
-    arduinoSerialData.write(('g1' + str(randomInt)).encode())
+    arduinoSerialData.write(('1' + str(randomInt)).encode())
     
 def processGame1Answer(challengeNum, userResponse):
     numberResponse = int(userResponse[-1:])
@@ -68,15 +68,15 @@ def main():
             cycles = 0
             timeBetweenBlinksInMillis = random.randint(timeIntervalLowerBoundInMillis, timeIntervalUpperBoundInMillis);
             timer.start()
-            arduinoSerialData.write(('g2,' + str(timeBetweenBlinksInMillis)).encode())
+            arduinoSerialData.write(('2,' + str(timeBetweenBlinksInMillis)).encode())
         if arduinoSerialData.inWaiting() > 0:
             myData = arduinoSerialData.readline().decode("utf-8")
-            if(myData[:2] == "g2"):
+            if(myData[:1] == "2"):
                 timer.stop()
                 cycles = 0
                 timer.calculateIfCorrectTime(timeBetweenBlinksInMillis, toleranceLateOrEarlyInSeconds)
             #If the data being sent was meant for game 1
-            if(myData[:2] == "g1"):
+            if(myData[:1] == "1"):
                 processGame1Input(myData)
             else:
                 print(myData)
