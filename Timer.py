@@ -14,7 +14,7 @@ class Timer:
         print(self.totalTime)
 
     def calculateIfCorrectTime(self, timeBetweenBlinksInMillis, toleranceLateOrEarly):
-        timeBtnShouldBePushed = (9 * timeBetweenBlinksInMillis / 1000)
+        timeBtnShouldBePushed = (8 * timeBetweenBlinksInMillis / 1000)
         lowerBound = timeBtnShouldBePushed - toleranceLateOrEarly
         upperBound = timeBtnShouldBePushed + toleranceLateOrEarly
         if self.totalTime > lowerBound and self.totalTime < upperBound:

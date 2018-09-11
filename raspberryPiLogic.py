@@ -23,7 +23,7 @@ game1lookup = { 1: 1,
 numOfCyclesBeforeNextInstanceOfGame2 = 500000
 timeIntervalLowerBoundInMillis = 300
 timeIntervalUpperBoundInMillis = 999
-toleranceLateOrEarlyInSeconds = 0.75
+toleranceLateOrEarlyInSeconds = 0.5
 
 #Functions
 def gameInit():

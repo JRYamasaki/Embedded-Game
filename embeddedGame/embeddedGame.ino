@@ -1,7 +1,7 @@
 #include <Pin.h>
 
 // Constants
-const uint16_t delayTimeInMs = 1000;
+const uint16_t delayTimeInMs = 500;
 
 // Game 1 Constants
 const uint8_t btn1 = 2;
@@ -41,7 +41,7 @@ void setup()
   pinMode(ledPin8, OUTPUT);
   pinMode(timingLED, OUTPUT);
   Serial.begin(115200);
-  Serial.setTimeout(15);
+  Serial.setTimeout(10);
 }
 
 void loop()
