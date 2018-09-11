@@ -19,10 +19,10 @@ const uint8_t timingLED = 9;
 const uint8_t toggleMax = 8;
 
 // Global Variables
-Pin inputPins[] = {Pin{btn1, "1btn1\n"},
-                   Pin{btn2, "1btn2\n"},
-                   Pin{btn3, "1btn3\n"},
-                   Pin{btn4, "1btn4\n"},
+Pin inputPins[] = {Pin{btn1, "11\n"},
+                   Pin{btn2, "12\n"},
+                   Pin{btn3, "13\n"},
+                   Pin{btn4, "14\n"},
                    Pin{timingButton, "2\n"}};
 const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 

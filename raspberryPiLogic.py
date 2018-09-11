@@ -34,7 +34,7 @@ def gameInit():
 def processGame1Input(userResponse):
     global randomInt
     #Take off newline and game indicator
-    userResponse = userResponse[2:-1]
+    userResponse = int(userResponse[1])
     #process the answer
     print(userResponse)
     processGame1Answer(randomInt, userResponse)
@@ -43,8 +43,7 @@ def processGame1Input(userResponse):
     randomInt = random.randint(1, 15)
     arduinoSerialData.write(('1' + str(randomInt)).encode())
     
-def processGame1Answer(challengeNum, userResponse):
-    numberResponse = int(userResponse[-1:])
+def processGame1Answer(challengeNum, numberResponse):
     a = bool(challengeNum & 1)
     b = bool((challengeNum & 2) >> 1)
     c = bool((challengeNum & 4) >> 2)
