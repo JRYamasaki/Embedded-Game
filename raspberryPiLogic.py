@@ -1,6 +1,7 @@
 import serial
 import random
 import time
+import constant
 from Timer import Timer
 
 arduinoSerialData = serial.Serial('/dev/ttyACM0', 115200)
@@ -20,11 +21,6 @@ game1lookup = { 1: 1,
                 13: 2,
                 14: 4,
                 15: 3 }
-numOfCyclesBeforeNextInstanceOfGame2 = 500000
-timeIntervalLowerBoundInMillis = 300
-timeIntervalUpperBoundInMillis = 999
-toleranceLateOrEarlyInSeconds = 0.5
-maxNumberOfStrikes = 3
 strikes = 0
 
 #Functions
@@ -55,24 +51,26 @@ def processGame1Answer(challengeNum, numberResponse):
         print("Correct!")
     else:
         print("Incorrect")
+        global strikes
         strikes += 1;
 
 def checkForGameOver():
-    if (strikes >= maxNumberOfStrikes):
+    if (strikes >= constant.MAXSTRIKES):
         print("GAME OVER")
         exit()
         
 def main():
     gameInit()
+    global strikes
     cycles = 0
     timer = Timer()
     timeBetweenBlinksInMillis = 0
 
     while True:
         cycles += 1
-        if (cycles == numOfCyclesBeforeNextInstanceOfGame2):
+        if (cycles == constant.MAXCYCLES):
             cycles = 0
-            timeBetweenBlinksInMillis = random.randint(timeIntervalLowerBoundInMillis, timeIntervalUpperBoundInMillis);
+            timeBetweenBlinksInMillis = random.randint(constant.LOWERBOUNDINMS, constant.UPPERBOUNDINMS);
             timer.start()
             arduinoSerialData.write(('2,' + str(timeBetweenBlinksInMillis)).encode())
         if arduinoSerialData.inWaiting() > 0:
@@ -80,7 +78,7 @@ def main():
             if(myData[:1] == "2"):
                 timer.stop()
                 cycles = 0
-                if(timer.buttonWasPushedAtCorrectTime(timeBetweenBlinksInMillis, toleranceLateOrEarlyInSeconds) is false):
+                if(timer.buttonWasPushedAtCorrectTime(timeBetweenBlinksInMillis, constant.TOLERANCEINSEC) is False):
                     strikes += 1
             #If the data being sent was meant for game 1
             if(myData[:1] == "1"):

@@ -19,11 +19,11 @@ class Timer:
         upperBound = timeBtnShouldBePushed + toleranceLateOrEarly
         if self.totalTime > lowerBound and self.totalTime < upperBound:
             print('Button press was correct!')
-            return true
+            return True
         else:
             print('Button press incorrect')
             print('timeBtnShouldBePushed: ' + str(timeBtnShouldBePushed))
             print('Lower Bound: ' + str(lowerBound))
             print('Upper Bound: ' + str(upperBound))
             print('You pressed the button at: ' + str(self.totalTime))
-            return false
+            return False
