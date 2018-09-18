@@ -1,22 +1,28 @@
 import time
+import random
+import constant
 
 class Timer:
-    startTime = 0
-    endTime = 0
-    totalTime = 0
+
+    def __init__(self, serialPort):
+        self.serial = serialPort
+        self.timeBetweenBlinksInMillis = 100
+        self.startTime = 0
+        self.endTime = 0
+        self.totalTime = 0
 
     def start(self):
+        self.timeBetweenBlinksInMillis = random.randint(constant.LOWERBOUNDINMS, constant.UPPERBOUNDINMS);
         self.startTime = time.time()
+        self.serial.write(('2,' + str(self.timeBetweenBlinksInMillis)).encode())
 
     def stop(self):
         self.endTime = time.time()
         self.totalTime = self.endTime - self.startTime
         print(self.totalTime)
-
-    def buttonWasPushedAtCorrectTime(self, timeBetweenBlinksInMillis, toleranceLateOrEarly):
-        timeBtnShouldBePushed = (8 * timeBetweenBlinksInMillis / 1000)
-        lowerBound = timeBtnShouldBePushed - toleranceLateOrEarly
-        upperBound = timeBtnShouldBePushed + toleranceLateOrEarly
+        timeBtnShouldBePushed = (8 * self.timeBetweenBlinksInMillis / 1000)
+        lowerBound = timeBtnShouldBePushed - constant.TOLERANCEINSEC
+        upperBound = timeBtnShouldBePushed + constant.TOLERANCEINSEC
         if self.totalTime > lowerBound and self.totalTime < upperBound:
             print('Button press was correct!')
             return True
