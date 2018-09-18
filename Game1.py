@@ -29,8 +29,10 @@ class Game1():
         print(userResponse)
         if(game1lookup[self.randomInt] == userResponse):
             print("Correct!")
+            return True
         else:
             print("Incorrect")
+            return False
 
         #generate new number and send to arduino
         self.randomInt = random.randint(1, 15)

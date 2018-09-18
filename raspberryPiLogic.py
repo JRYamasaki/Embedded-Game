@@ -4,6 +4,7 @@ import time
 import constant
 from Game1 import Game1
 from Timer import Timer
+from StrikeCounter import StrikeCounter
 
 arduinoSerialData = serial.Serial('/dev/ttyACM0', 115200)
 randomInt = random.randint(1, 15)
@@ -23,6 +24,7 @@ def checkForGameOver():
 def main():
     LEDGame = Game1(arduinoSerialData, randomInt)
     timer = Timer(arduinoSerialData)
+    strikes = StrikeCounter()
     gameInit()
     cycles = 0
 
@@ -34,11 +36,13 @@ def main():
         if arduinoSerialData.inWaiting() > 0:
             myData = arduinoSerialData.readline().decode("utf-8")
             if(myData[:1] == "2"):
-                timer.stop()
+                result = timer.stop()
+                strikes.checkForStrikeIncrement(result)
                 cycles = 0
             #If the data being sent was meant for game 1
             if(myData[:1] == "1"):
-                LEDGame.processInput(myData)
+                result = LEDGame.processInput(myData)
+                strikes.checkForStrikeIncrement(result)
             else:
                 print(myData)
         checkForGameOver()
