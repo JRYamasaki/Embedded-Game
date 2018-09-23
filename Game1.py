@@ -27,13 +27,14 @@ class Game1():
         userResponse = int(userResponse[1])
         #process the answer
         print(userResponse)
+        answerIsCorrect = False
         if(game1lookup[self.randomInt] == userResponse):
             print("Correct!")
-            return True
+            answerIsCorrect = True
         else:
             print("Incorrect")
-            return False
 
         #generate new number and send to arduino
         self.randomInt = random.randint(1, 15)
         self.serial.write(('1' + str(self.randomInt)).encode())
+        return answerIsCorrect
