@@ -2,6 +2,9 @@ import time
 import random
 import constant
 
+def calculateTimeButtonShouldBePushed(timeBetweenBlinksInMillis):
+        return (8 * timeBetweenBlinksInMillis / 1000)
+
 class Timer:
 
     def __init__(self, serialPort):
@@ -20,7 +23,7 @@ class Timer:
         self.endTime = time.time()
         self.totalTime = self.endTime - self.startTime
         print(self.totalTime)
-        timeBtnShouldBePushed = (8 * self.timeBetweenBlinksInMillis / 1000)
+        timeBtnShouldBePushed = calculateTimeButtonShouldBePushed(self.timeBetweenBlinksInMillis)
         lowerBound = timeBtnShouldBePushed - constant.TOLERANCEINSEC
         upperBound = timeBtnShouldBePushed + constant.TOLERANCEINSEC
         if self.totalTime > lowerBound and self.totalTime < upperBound:
