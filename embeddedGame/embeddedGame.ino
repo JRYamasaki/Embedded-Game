@@ -1,4 +1,5 @@
 #include <Pin.h>
+#include <LiquidCrystal.h>
 
 // Constants
 const uint16_t delayTimeInMs = 500;
@@ -18,6 +19,15 @@ const uint8_t timingButton = 22;
 const uint8_t timingLED = 9;
 const uint8_t toggleMax = 8;
 
+//LCD Display Constants
+const uint8_t rs =26;
+const uint8_t en = 30;
+const uint8_t d4 = 32;
+const uint8_t d5 = 34;
+const uint8_t d6 = 36;
+const uint8_t d7 = 38;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
 // Global Variables
 Pin inputPins[] = {Pin{btn1, "11\n"},
                    Pin{btn2, "12\n"},
@@ -35,6 +45,8 @@ boolean timingLEDState = true;
 
 void setup()
 {
+  lcd.begin(16, 2); // number of rows and columns
+  lcd.print("Code goes here");
   pinMode(ledPin1, OUTPUT);
   pinMode(ledPin2, OUTPUT);
   pinMode(ledPin4, OUTPUT);
@@ -46,6 +58,7 @@ void setup()
 
 void loop()
 {
+  lcd.setCursor(0, 1);
   if(Serial.available())
   {
     allocateSerialData(Serial.readString());
@@ -78,6 +91,11 @@ void processGame2Data(String data)
     toggleLED(timingLED);
     timingLEDIsAllowedToToggle = true;
   }
+}
+
+void processGame3Data(String data)
+{
+  lcd.print(data);
 }
 
 void checkForToggleEvent()
