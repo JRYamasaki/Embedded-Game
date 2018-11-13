@@ -13,8 +13,10 @@ strikes = 0
 #Functions
 def gameInit():
     #Send initial random number to game 1
-    time.sleep(1);
-    arduinoSerialData.write(('1' + str(randomInt)).encode());
+    time.sleep(1)
+    arduinoSerialData.write(('1' + str(randomInt)).encode())
+    time.sleep(0.125)
+    arduinoSerialData.write(('3' + str(random.choice(list(constant.SEQUENCEPAIRS.keys()))) + '0').encode())
 
 def checkForGameOver():
     if (strikes >= constant.MAXSTRIKES):

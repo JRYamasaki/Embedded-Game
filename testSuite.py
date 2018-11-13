@@ -62,20 +62,18 @@ def test_keypad_add_character_too_many_characters():
     assert len(sequence.userSequence) == constant.KEYPADSEQUENCELENGTH, "addCharacter() did not stop overflow of length"
 
 def test_keypad_process_sequence_correct():
-    sequencePairs = { "1" : "######" }
     sequence = SequenceAnalyzer()
-    key = list(sequencePairs.keys())[0]
-    correctSequence = list(sequencePairs.values())[0]
+    key = list(constant.SEQUENCEPAIRS.keys())[0]
+    correctSequence = list(constant.SEQUENCEPAIRS.values())[0]
     sequence.setSequence(key)
     for char in correctSequence:
         sequence.addCharacter(char)
     assert sequence.processSequence() == True, "processSequence did not return True when user input was correct"
 
 def test_keypad_process_sequence_incorrect():
-    sequencePairs = { "1" : "######" }
     sequence = SequenceAnalyzer()
-    key = list(sequencePairs.keys())[0]
-    correctSequence = list(sequencePairs.values())[0]
+    key = list(constant.SEQUENCEPAIRS.keys())[0]
+    correctSequence = list(constant.SEQUENCEPAIRS.values())[0]
     sequence.setSequence(key)
     sequence.addCharacter('?')
     for char in correctSequence:

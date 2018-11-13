@@ -1,7 +1,5 @@
 import constant
 
-sequencePairs = { "1" : "######" }
-
 class SequenceAnalyzer:
 
     def __init__(self):
@@ -16,5 +14,5 @@ class SequenceAnalyzer:
         self.currentSequence = sequenceString
 
     def processSequence(self):
-        return sequencePairs[self.currentSequence] == self.userSequence
+        return constant.SEQUENCEPAIRS[self.currentSequence] == self.userSequence
         

@@ -79,6 +79,7 @@ void allocateSerialData(const String& data)
 {
   processGame1Data(data);
   processGame2Data(data);
+  processGame3Data(data);
 }
 
 void processGame1Data(String data)
@@ -101,7 +102,16 @@ void processGame2Data(String data)
 
 void processGame3Data(String data)
 {
-  lcd.print(data);
+  if(data.charAt(0) == '3')
+  {
+    if(data.charAt(data.length() - 1) == '0')
+    {
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(0, 0);
+      lcd.print(data.substring(1, data.length() - 1));
+    }
+  }
 }
 
 void checkForToggleEvent()
