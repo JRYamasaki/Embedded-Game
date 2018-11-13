@@ -43,6 +43,8 @@ def main():
             if(myData[:1] == "1"):
                 result = LEDGame.processInput(myData)
                 strikes.checkForStrikeIncrement(result)
+            if(myData[:1] == "3"):
+                print(myData[1])
             else:
                 print(myData)
         checkForGameOver()

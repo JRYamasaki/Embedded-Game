@@ -4,6 +4,7 @@ import time
 from Game1 import Game1
 from Timer import Timer
 from StrikeCounter import StrikeCounter
+from KeypadSequence import SequenceAnalyzer
 
 arduinoSerialData = serial.Serial('/dev/ttyACM0', 115200)
 
@@ -48,7 +49,39 @@ def test_timer_correct_stop():
     timeToWait = (8 * timer.timeBetweenBlinksInMillis / 1000)
     time.sleep(timeToWait)
     assert timer.stop() == True, "Stop() returned False even though the button was pushed at the correct time"
-    
+
+def test_keypad_add_character():
+    sequence = SequenceAnalyzer()
+    sequence.addCharacter("1");
+    assert len(sequence.userSequence) == 1, "addCharacter() did not properly add character to the sequence"
+
+def test_keypad_add_character_too_many_characters():
+    sequence = SequenceAnalyzer()
+    for i in range(constant.KEYPADSEQUENCELENGTH + 1):
+        sequence.addCharacter("1")
+    assert len(sequence.userSequence) == constant.KEYPADSEQUENCELENGTH, "addCharacter() did not stop overflow of length"
+
+def test_keypad_process_sequence_correct():
+    sequencePairs = { "1" : "######" }
+    sequence = SequenceAnalyzer()
+    key = list(sequencePairs.keys())[0]
+    correctSequence = list(sequencePairs.values())[0]
+    sequence.setSequence(key)
+    for char in correctSequence:
+        sequence.addCharacter(char)
+    assert sequence.processSequence() == True, "processSequence did not return True when user input was correct"
+
+def test_keypad_process_sequence_incorrect():
+    sequencePairs = { "1" : "######" }
+    sequence = SequenceAnalyzer()
+    key = list(sequencePairs.keys())[0]
+    correctSequence = list(sequencePairs.values())[0]
+    sequence.setSequence(key)
+    sequence.addCharacter('?')
+    for char in correctSequence:
+        sequence.addCharacter(char)
+    assert sequence.processSequence() == False, "processSequence did not return False when user input was incorrect"
+
 if __name__ == '__main__':
     test_processInput_correct_value()
     test_processInput_incorrect_value()
@@ -57,4 +90,8 @@ if __name__ == '__main__':
     test_timer_early_stop()
     test_timer_late_stop()
     test_timer_correct_stop()
+    test_keypad_add_character()
+    test_keypad_add_character_too_many_characters()
+    test_keypad_process_sequence_correct()
+    test_keypad_process_sequence_incorrect()
         

@@ -20,20 +20,27 @@ const uint8_t timingLED = 9;
 const uint8_t toggleMax = 8;
 
 //LCD Display Constants
-const uint8_t rs =26;
-const uint8_t en = 30;
-const uint8_t d4 = 32;
-const uint8_t d5 = 34;
-const uint8_t d6 = 36;
-const uint8_t d7 = 38;
+//pin 1 to ground
+//pin 2 to 5V
+//pin 3 to 10K pot
+const uint8_t rs =24;
+const uint8_t en = 26;
+const uint8_t d4 = 28;
+const uint8_t d5 = 30;
+const uint8_t d6 = 32;
+const uint8_t d7 = 34;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+//Keypad Constants
+const uint8_t starKey = 23;
 
 // Global Variables
 Pin inputPins[] = {Pin{btn1, "11\n"},
                    Pin{btn2, "12\n"},
                    Pin{btn3, "13\n"},
                    Pin{btn4, "14\n"},
-                   Pin{timingButton, "2\n"}};
+                   Pin{timingButton, "2\n"},
+                   Pin{starKey, "3*"}};
 const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
 String serialInput = "";
@@ -58,7 +65,6 @@ void setup()
 
 void loop()
 {
-  lcd.setCursor(0, 1);
   if(Serial.available())
   {
     allocateSerialData(Serial.readString());
