@@ -5,6 +5,7 @@ import constant
 from Game1 import Game1
 from Timer import Timer
 from StrikeCounter import StrikeCounter
+from KeypadSequence import SequenceAnalyzer
 
 arduinoSerialData = serial.Serial('/dev/ttyACM0', 115200)
 randomInt = random.randint(1, 15)
@@ -27,6 +28,7 @@ def main():
     LEDGame = Game1(arduinoSerialData, randomInt)
     timer = Timer(arduinoSerialData)
     strikes = StrikeCounter()
+    seqAnalyzer = SequenceAnalyzer()
     gameInit()
     cycles = 0
 
@@ -46,7 +48,8 @@ def main():
                 result = LEDGame.processInput(myData)
                 strikes.checkForStrikeIncrement(result)
             if(myData[:1] == "3"):
-                print(myData[1])
+                seqAnalyzer.addCharacter(myData[1])
+                arduinoSerialData.write(("3" + seqAnalyzer.userSequence + "1").encode())
             else:
                 print(myData)
         checkForGameOver()

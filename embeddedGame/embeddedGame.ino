@@ -40,7 +40,7 @@ Pin inputPins[] = {Pin{btn1, "11\n"},
                    Pin{btn3, "13\n"},
                    Pin{btn4, "14\n"},
                    Pin{timingButton, "2\n"},
-                   Pin{starKey, "3*"}};
+                   Pin{starKey, "3*\n"}};
 const uint8_t numOfInputs = sizeof(inputPins) / sizeof(inputPins[0]);
 
 String serialInput = "";
@@ -109,6 +109,13 @@ void processGame3Data(String data)
       lcd.setCursor(0, 0);
       lcd.print("                ");
       lcd.setCursor(0, 0);
+      lcd.print(data.substring(1, data.length() - 1));
+    }
+    else if (data.charAt(data.length() - 1) == '1')
+    {
+      lcd.setCursor(0, 1);
+      lcd.print("                ");
+      lcd.setCursor(0, 1);
       lcd.print(data.substring(1, data.length() - 1));
     }
   }
