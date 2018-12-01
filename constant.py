@@ -5,4 +5,5 @@ TOLERANCEINSEC = 0.5
 MAXSTRIKES = 3
 KEYPADSEQUENCELENGTH = 6
 
-SEQUENCEPAIRS = { "ABCefg" : "######" }
+SEQUENCEPAIRS = {"ABCefg" : "******",
+                 "aj6nk9" : "111111"}

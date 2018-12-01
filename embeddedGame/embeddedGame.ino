@@ -118,6 +118,18 @@ void processGame3Data(String data)
       lcd.setCursor(0, 1);
       lcd.print(data.substring(1, data.length() - 1));
     }
+    else if (data.charAt(data.length() - 1) == '2')
+    {
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+      lcd.setCursor(0, 1);
+      lcd.print("                ");
+      lcd.setCursor(0, 0);
+      lcd.print(data.substring(1, data.length() - 1));
+      delay(1000);
+      lcd.setCursor(0, 0);
+      lcd.print("                ");
+    }
   }
 }
 
